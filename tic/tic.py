@@ -1,7 +1,7 @@
 from colorama import init
 init(autoreset=True)
 
-from colorama import Fore, Back, Style
+from colorama import Fore
 
 class Player:
 
@@ -36,11 +36,19 @@ class TicTacToe:
         move = positions[input-1]
         return move
 
+    def check_empty(self, value):
+        if value == '':
+            print(Fore.RED + 'you must enter a value')
+            return True
+        else:
+            return False
+
     def nope(self):
+        self.taken_squares -= 1
         print(Fore.RED + 'that spot is already taken')
 
     def error(self):
-        print(Fore.RED + 'the value must be a single integer')
+        print(Fore.RED + 'the value must be a single integer between and including 1 and 9')
 
     def change_turn(self):
             if self.turn == 0:
@@ -70,7 +78,6 @@ class TicTacToe:
             row += 1
         return False
 
-
     def check_col_for_win(self):
         col = 0
         played = ['X', 'O']
@@ -80,6 +87,19 @@ class TicTacToe:
                 return True
             col += 1
         return False
+
+    def check_diag_for_win(self):
+        square = self.board
+        played = ['X', 'O']
+        if square[0][0].value in played and square[0][0].value == square[1][1].value == square[2][2].value:
+            print('down')
+            return True
+        if square[2][0].value in played and square[2][0].value == square[1][1].value == square[0][2].value:
+            print('up')
+            return True
+        else:
+            return False
+            
 
     def check_stale_mate(self):
         if self.taken_squares == 9:
@@ -94,67 +114,17 @@ class TicTacToe:
         if self.check_row_for_win():
             print(Fore.GREEN + 'row win')
             return True
+        if self.check_diag_for_win():
+            print(Fore.GREEN + 'diagonal win')
+            return True
         if self.check_stale_mate():
-            print(Fore.GREEN + 'stale')
+            print(Fore.YELLOW + 'stalemate')
             return True
         else:
             return False
 
     def reset_board(self):
+        self.taken_squares = 0
         for row in self.board:
             for col in row:
                 col.value = ' '
-
-class Game:
-
-    def __init__(self):
-        self.active = True
-        self.player_one = Player("Player One")
-        self.player_two = Player('Player Two')
-        self.play = TicTacToe()
-
-    def name_players(self):
-        self.player_one.name = input('what is player one\'s name?\n>> ')
-        self.player_two.name = input('what is player two\'s name?\n>> ')
-
-    def get_player(self):
-        turn = self.play.turn
-        if turn == 0:
-            return self.player_one
-        if turn == 1:
-            return self.player_two
-
-    def start(self):
-        while self.active == True:
-            player = self.get_player()
-            self.play.show()
-            move = int(input(f'{player.name}, where would you like to move? 1-9\n>> '))
-            
-            if move < 1 > 9:
-                self.play.error()
-                self.play.change_turn()
-            self.play.place(move)
-
-            if self.play.check_for_win_or_stalemate():
-                self.play.show()
-                self.play.reset_board()
-                self.play.change_turn()
-                break
-
-            self.play.change_turn()
-
-    def game_loop(self):
-        loops = 0
-        while self.active == True:
-            response = input('do you want to play a game?\n>> ')
-            if response in ['yup', 'yes', 'y', 'sure', 'yeah']:
-                if loops == 0:
-                    self.name_players()
-                    loops += 1
-                self.start()
-            else:
-                self.active = False
-
-
-start = Game()
-start.game_loop()
