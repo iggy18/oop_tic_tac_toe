@@ -1,0 +1,23 @@
+words = [
+    'list',
+    'stop',
+    'complete',
+    'this',
+    'suppose',
+    'question',
+    'bishop',
+    'function',
+    'worship',
+    'warship',
+    'pig',
+    'nose',
+    'purple',
+    'sky',
+    'orange',
+    'flour',
+    'floride',
+    'carrot',
+    'computer',
+    'spanish',
+    'mississippi'
+]
